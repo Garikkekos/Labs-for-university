@@ -1,0 +1,18 @@
+from hashlib import sha256
+import time
+
+base = "050321501352+"
+max_tries = 2_000_000  # при необходимости увеличьте
+
+start = time.time()
+for n in range(max_tries):
+    s = base + str(n)
+    h = sha256(s.encode('utf-8')).hexdigest()
+    if h.startswith("00"):  # два ведущих нуля в hex
+        print("Found! suffix =", n)
+        print("Input string:", s)
+        print("SHA256:", h)
+        print("Attempts:", n+1, "Time:", time.time() - start)
+        break
+else:
+    print("Не найдено в пределах max_tries. Увеличьте max_tries и запустите снова.") 
