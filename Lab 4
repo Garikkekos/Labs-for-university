@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+// Подключаем стандарт ERC20 из OpenZeppelin
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract TastyToken is ERC20, Ownable {
+    constructor() ERC20("tasty", "TASTY") Ownable(msg.sender) {}
+
+    // Устанавливаем количество десятичных знаков — 8
+    function decimals() public pure override returns (uint8) {
+        return 8;
+    }
+
+    // Функция эмиссии (mint)
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+}
