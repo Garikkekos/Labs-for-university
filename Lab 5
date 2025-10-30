@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+// OpenZeppelin 5.x
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract TastyToken is ERC20, Ownable {
+    // Имя и символ заданы в конструкторе
+    // Максимальная эмиссия: 1_000_000 * 10^8 (с учётом decimals = 8)
+    uint256 public constant MAX_SUPPLY = 1_000_000 * 10**8;
+
+    // В OZ 5.x Ownable ожидает initialOwner
+    constructor()
+        ERC20("Tasty Token", "TASTY")
+        Ownable(msg.sender)
+    {}
+
+    // Количество десятичных знаков — 8
+    function decimals() public view virtual override returns (uint8) {
+        return 8;
+    }
+
+    // Минт разрешён только владельцу и строго в пределах MAX_SUPPLY
+    function mint(address to, uint256 amount) external onlyOwner {
+        require(totalSupply() + amount <= MAX_SUPPLY, "Cap exceeded");
+        _mint(to, amount);
+    }
+}
